@@ -1,10 +1,7 @@
 package com.tal.grpc.greeting.client;
 
 import com.proto.dummy.DummyServiceGrpc;
-import com.proto.greet.GreetRequest;
-import com.proto.greet.GreetResponse;
-import com.proto.greet.GreetServiceGrpc;
-import com.proto.greet.Greeting;
+import com.proto.greet.*;
 import io.grpc.ManagedChannel;
 import io.grpc.ManagedChannelBuilder;
 
@@ -12,7 +9,33 @@ public class GreetingClient {
 
     public static void main(String[] args) {
         System.out.println("Hello, I am a gRPC client");
+        //unaryCall();
 
+        // Server Streaming Call
+        ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8888)
+                .usePlaintext()
+                .build();
+
+        GreetServiceGrpc.GreetServiceBlockingStub greetClient = GreetServiceGrpc.newBlockingStub(channel);
+        Greeting greeting = Greeting.newBuilder()
+                .setFirstName("Piyush")
+                .setLastName("T")
+                .build();
+
+        GreetManyTimesRequest greetManyTimesRequest = GreetManyTimesRequest.newBuilder()
+                .setGreeting(greeting)
+                .build();
+
+        // We stream the responses ( in a blocking manner )
+        greetClient.greetManyTimes(greetManyTimesRequest)
+                .forEachRemaining( greetManyTimesResponse -> {
+                    System.out.println(greetManyTimesResponse.getResult());
+                });
+
+        shutdownChannel(channel);
+    }
+
+    private static void unaryCall(){
         ManagedChannel channel = ManagedChannelBuilder.forAddress("localhost", 8888)
                 .usePlaintext()
                 .build();
@@ -38,6 +61,10 @@ public class GreetingClient {
         // Do something
         System.out.println(greetResponse.getResult());
 
+        shutdownChannel(channel);
+    }
+
+    private static void shutdownChannel(ManagedChannel channel){
         System.out.println("Shutting Down Channel");
         channel.shutdown();
     }
