@@ -1,8 +1,6 @@
 package com.tal.grpc.calculator.server;
 
-import com.proto.calculator.CalculatorServiceGrpc;
-import com.proto.calculator.SumRequest;
-import com.proto.calculator.SumResponse;
+import com.proto.calculator.*;
 import io.grpc.stub.StreamObserver;
 
 public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServiceImplBase {
@@ -15,5 +13,36 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
 
         responseObserver.onNext(sumResponse);
         responseObserver.onCompleted();
+    }
+
+
+    @Override
+    public void primeNumberDecomposition(PrimeNumberDecompositionRequest request, StreamObserver<PrimeNumberDecompositionResponse> responseObserver) {
+        //PrimeNumberDecompositionResponse response = PrimeNumberDecompositionResponse.newBuilder();
+
+        int k = 2;
+        int N = request.getNumber();
+
+        try {
+            while (N > 1) {
+                if (N % k == 0) {
+                    // print k
+                    PrimeNumberDecompositionResponse response = PrimeNumberDecompositionResponse.newBuilder()
+                            .setPrimeNumber(k)
+                            .build();
+
+                    responseObserver.onNext(response);
+                    N = N / k;
+
+                    Thread.sleep(500L);
+                } else {
+                    k++;
+                }
+            }
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        } finally {
+            responseObserver.onCompleted();
+        }
     }
 }
