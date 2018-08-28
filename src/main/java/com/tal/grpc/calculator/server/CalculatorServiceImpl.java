@@ -28,7 +28,7 @@ public class CalculatorServiceImpl extends CalculatorServiceGrpc.CalculatorServi
                 if (N % k == 0) {
                     // print k
                     PrimeNumberDecompositionResponse response = PrimeNumberDecompositionResponse.newBuilder()
-                            .setPrimeNumber(k)
+                            .setPrimeFactor(k)
                             .build();
 
                     responseObserver.onNext(response);

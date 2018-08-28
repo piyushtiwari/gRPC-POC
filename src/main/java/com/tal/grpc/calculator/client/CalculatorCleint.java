@@ -13,6 +13,7 @@ public class CalculatorCleint {
 
         CalculatorServiceGrpc.CalculatorServiceBlockingStub stub = CalculatorServiceGrpc.newBlockingStub(channel);
 
+        // Unary
 //        SumRequest sumRequest = SumRequest.newBuilder()
 //                .setFirstNumber(10)
 //                .setSecondNumber(5)
@@ -24,13 +25,15 @@ public class CalculatorCleint {
 //
 //        channel.shutdown();
 
+
+        // Streamin Server
         PrimeNumberDecompositionRequest request = PrimeNumberDecompositionRequest.newBuilder()
                 .setNumber(120)
                 .build();
 
         stub.primeNumberDecomposition(request)
                 .forEachRemaining( primeNumberDecompositionResponse -> {
-                    System.out.println(primeNumberDecompositionResponse.getPrimeNumber());
+                    System.out.println(primeNumberDecompositionResponse.getPrimeFactor());
                 });
 
         channel.shutdown();

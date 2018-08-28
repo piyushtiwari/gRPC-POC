@@ -19,7 +19,7 @@ message PrimeNumberDecompositionRequest{
 }
 
 message PrimeNumberDecompositionResponse{
-    int32 prime_number = 1;
+    int32 prime_factor = 1;
 }
 
 service CalculatorService{
